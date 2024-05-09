@@ -1,6 +1,6 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Add this import
 import 'package:ios_appointment_app/home.dart';
 import 'package:ios_appointment_app/login.dart';
 import 'package:ios_appointment_app/main.dart';
@@ -21,10 +21,16 @@ class _SignUpState extends State<SignUp> {
   final _formkey = GlobalKey<FormState>();
 
   registration() async {
-    if (password != null&& namecontroller.text!=""&& mailcontroller.text!="") {
+    if (password != null &&
+        namecontroller.text != "" &&
+        mailcontroller.text != "") {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
+        await FirebaseFirestore.instance.collection('users').doc(email).set({
+          'Email': email,
+          'Name': namecontroller.text,
+        }); // Saving user data to Firestore
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
           "Registered Successfully",
@@ -139,25 +145,25 @@ class _SignUpState extends State<SignUp> {
                         controller: passwordcontroller,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            
                             hintText: "Password",
                             hintStyle: TextStyle(
                                 color: Color(0xFFb2b7bf), fontSize: 18.0)),
-             obscureText: true,  ),
+                        obscureText: true,
+                      ),
                     ),
                     SizedBox(
                       height: 30.0,
                     ),
                     GestureDetector(
-                      onTap: (){
-                        if(_formkey.currentState!.validate()){
+                      onTap: () {
+                        if (_formkey.currentState!.validate()) {
                           setState(() {
-                            email=mailcontroller.text;
-                            name= namecontroller.text;
-                            password=passwordcontroller.text;
+                            email = mailcontroller.text;
+                            name = namecontroller.text;
+                            password = passwordcontroller.text;
                           });
+                          registration();
                         }
-                        registration();
                       },
                       child: Container(
                           width: MediaQuery.of(context).size.width,
