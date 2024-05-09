@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF273671),
+        backgroundColor: Colors.blue,
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -241,7 +241,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Edit Appointment'),
+      title: Text('Edit Appointment' , style: TextStyle(color: Color(0xFF273671), fontWeight: FontWeight.bold),),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,9 +314,12 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Cancel'),
+          child: Text('Cancel',style: TextStyle(color: Color(0xFF273671), fontWeight: FontWeight.bold),),
         ),
         ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF273671)),
+          ),
           onPressed: () {
             // Update data to Firestore
             FirebaseFirestore.instance
@@ -342,7 +345,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
               print("Failed to update appointment: $error");
             });
           },
-          child: Text('Save'),
+          child: Text('Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
         ),
       ],
     );
