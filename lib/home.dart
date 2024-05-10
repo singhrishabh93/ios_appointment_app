@@ -528,39 +528,42 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
             },
           ),
           SizedBox(height: 20.0),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Color(0xFF273671)),
-            ),
-            onPressed: () {
-              // Upload data to Firestore
-              FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.email!)
-                  .collection('appointment')
-                  .doc(title)
-                  .set({
-                'Date': DateFormat('dd/MM/yyyy').format(_selectedDate),
-                'Time': _selectedTime.format(context),
-                'Location': location,
-                'Description': description,
-                'Title': title,
-              }).then((value) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                    "Appointment Scheduled Successfully",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ));
-                Navigator.pop(context); // Close the bottom sheet
-              }).catchError((error) {
-                print("Failed to schedule appointment: $error");
-              });
-            },
-            child: Text(
-              'Schedule Appointment',
-              style: TextStyle(color: Colors.yellow),
+          SizedBox(
+            height: 50,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Color(0xFF273671)),
+              ),
+              onPressed: () {
+                // Upload data to Firestore
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email!)
+                    .collection('appointment')
+                    .doc(title)
+                    .set({
+                  'Date': DateFormat('dd/MM/yyyy').format(_selectedDate),
+                  'Time': _selectedTime.format(context),
+                  'Location': location,
+                  'Description': description,
+                  'Title': title,
+                }).then((value) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      "Appointment Scheduled Successfully",
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ));
+                  Navigator.pop(context); // Close the bottom sheet
+                }).catchError((error) {
+                  print("Failed to schedule appointment: $error");
+                });
+              },
+              child: Text(
+                'Schedule Appointment',
+                style: TextStyle(color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w500),
+              ),
             ),
           ),
         ],
