@@ -16,6 +16,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = DateTime.now();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +31,30 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.grey[200],
         title: const Text(
           "My Appointments",
-          style:
-              TextStyle(color: Color(0xFF273671), fontWeight: FontWeight.bold),
+          style: TextStyle(color: Color(0xFF273671), fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
       body: Container(
         color: Colors.grey[200],
-        child: const ScheduledAppointments(),
+        child: Column(
+          children: [
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF273671)),
+              ),
+              onPressed: () {
+                _selectDate(context);
+              },
+              child: Text("Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}" ,style: TextStyle(color: Colors.yellow),),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ScheduledAppointments(selectedDate: _selectedDate),
+            ),
+          ],
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -82,10 +106,26 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
+  }
 }
 
 class ScheduledAppointments extends StatelessWidget {
-  const ScheduledAppointments({super.key});
+  final DateTime selectedDate;
+
+  const ScheduledAppointments({Key? key, required this.selectedDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,22 +145,29 @@ class ScheduledAppointments extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (snapshot.data!.docs.isEmpty) {
+        final List<QueryDocumentSnapshot> appointments = snapshot.data!.docs.where((doc) {
+          final appointmentDate = DateFormat('dd/MM/yyyy').parse(doc['Date']);
+          return appointmentDate.isAtSameMomentAs(selectedDate);
+        }).toList();
+
+        if (appointments.isEmpty) {
           return const Center(
               child: Text(
-                  'No appointments scheduled. Click on \nthe + button to schedule an appointment'));
+                  'No appointments scheduled for day. Click on \nthe + button to schedule an appointment'));
         }
 
-        return ListView(
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        return ListView.builder(
+          itemCount: appointments.length,
+          itemBuilder: (BuildContext context, int index) {
+            final data = appointments[index].data() as Map<String, dynamic>;
             return AppointmentCard(data: data);
-          }).toList(),
+          },
         );
       },
     );
   }
 }
+
 
 class AppointmentCard extends StatelessWidget {
   final Map<String, dynamic> data;
