@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[200],
-        title: Text(
+        title: const Text(
           "My Appointments",
           style:
               TextStyle(color: Color(0xFF273671), fontWeight: FontWeight.bold),
@@ -30,38 +30,38 @@ class _HomeState extends State<Home> {
       ),
       body: Container(
         color: Colors.grey[200],
-        child: ScheduledAppointments(),
+        child: const ScheduledAppointments(),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             ListTile(
-              title: Text('Profile Settings'),
+              title: const Text('Profile Settings'),
               onTap: () {
-                Get.to(() => ProfilePage());
+                Get.to(() => const ProfilePage());
               },
             ),
             ListTile(
-              title: Text('Manage Password'),
+              title: const Text('Manage Password'),
               onTap: () {
-                Get.to(() => ForgotPassword());
+                Get.to(() => const ForgotPassword());
               },
             ),
             ListTile(
-              title: Text('Help'),
+              title: const Text('Help'),
               onTap: () {
-                Get.to(() => HelpPage());
+                Get.to(() => const HelpPage());
               },
             ),
             ListTile(
-              title: Text('Logout'),
+              title: const Text('Logout'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LogIn()),
+                  MaterialPageRoute(builder: (context) => const LogIn()),
                 );
               },
             ),
@@ -74,17 +74,19 @@ class _HomeState extends State<Home> {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return ScheduleAppointmentForm();
+              return const ScheduleAppointmentForm();
             },
           );
         },
-        child: Icon(Icons.add, color: Color(0xFF273671)),
+        child: const Icon(Icons.add, color: Color(0xFF273671)),
       ),
     );
   }
 }
 
 class ScheduledAppointments extends StatelessWidget {
+  const ScheduledAppointments({super.key});
+
   @override
   Widget build(BuildContext context) {
     final String email = FirebaseAuth.instance.currentUser!.email!;
@@ -100,11 +102,11 @@ class ScheduledAppointments extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.data!.docs.isEmpty) {
-          return Center(
+          return const Center(
               child: Text(
                   'No appointments scheduled. Click on \nthe + button to schedule an appointment'));
         }
@@ -136,21 +138,21 @@ class AppointmentCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        color: Color(0xFF273671),
+        color: const Color(0xFF273671),
         elevation: 5,
         child: ListTile(
           title: Text(title,
               style:
-                  TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold)),
+                  const TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold)),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Date: $date', style: TextStyle(color: Colors.white)),
-              Text('Time: $time', style: TextStyle(color: Colors.white)),
+              Text('Date: $date', style: const TextStyle(color: Colors.white)),
+              Text('Time: $time', style: const TextStyle(color: Colors.white)),
               Text('Location: $location',
-                  style: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white)),
               Text('Description: $description',
-                  style: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white)),
             ],
           ),
           trailing: Row(
@@ -166,7 +168,7 @@ class AppointmentCard extends StatelessWidget {
                     },
                   );
                 },
-                icon: Icon(Icons.edit, color: Colors.blue),
+                icon: const Icon(Icons.edit, color: Colors.blue),
               ),
               IconButton(
                 onPressed: () {
@@ -175,15 +177,15 @@ class AppointmentCard extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Confirm Delete'),
-                        content: Text(
+                        title: const Text('Confirm Delete'),
+                        content: const Text(
                             'Are you sure you want to delete this appointment?'),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text('Cancel'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () {
@@ -196,7 +198,7 @@ class AppointmentCard extends StatelessWidget {
                                   .delete()
                                   .then((value) {
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                    .showSnackBar(const SnackBar(
                                   content: Text(
                                     "Appointment Deleted Successfully",
                                     style: TextStyle(fontSize: 18.0),
@@ -207,14 +209,14 @@ class AppointmentCard extends StatelessWidget {
                                 print("Failed to delete appointment: $error");
                               });
                             },
-                            child: Text('Delete'),
+                            child: const Text('Delete'),
                           ),
                         ],
                       );
                     },
                   );
                 },
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: Colors.red),
               ),
             ],
           ),
@@ -243,9 +245,9 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
   late String _location;
   late String _description;
 
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _locationController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -290,7 +292,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         'Edit Appointment',
         style: TextStyle(color: Color(0xFF273671), fontWeight: FontWeight.bold),
       ),
@@ -301,14 +303,14 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(labelText: 'Title/Name'),
+              decoration: const InputDecoration(labelText: 'Title/Name'),
               onChanged: (value) {
                 setState(() {
                   _title = value;
                 });
               },
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Row(
               children: [
                 Expanded(
@@ -319,14 +321,14 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
                         controller: TextEditingController(
                             text:
                                 DateFormat('dd/MM/yyyy').format(_selectedDate)),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Date',
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 10.0),
+                const SizedBox(width: 10.0),
                 Expanded(
                   child: GestureDetector(
                     onTap: () => _selectTime(context),
@@ -334,7 +336,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
                       child: TextField(
                         controller: TextEditingController(
                             text: _selectedTime.format(context)),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Time',
                         ),
                       ),
@@ -345,7 +347,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
             ),
             TextField(
               controller: _locationController,
-              decoration: InputDecoration(labelText: 'Location'),
+              decoration: const InputDecoration(labelText: 'Location'),
               onChanged: (value) {
                 setState(() {
                   _location = value;
@@ -354,7 +356,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
             ),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description/Notes'),
+              decoration: const InputDecoration(labelText: 'Description/Notes'),
               onChanged: (value) {
                 setState(() {
                   _description = value;
@@ -369,7 +371,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(
                 color: Color(0xFF273671), fontWeight: FontWeight.bold),
@@ -378,7 +380,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF273671)),
+                MaterialStateProperty.all<Color>(const Color(0xFF273671)),
           ),
           onPressed: () {
             // Update data to Firestore
@@ -394,7 +396,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
               'Description': _description,
               'Title': _title,
             }).then((value) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text(
                   "Appointment Updated Successfully",
                   style: TextStyle(fontSize: 18.0),
@@ -405,7 +407,7 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
               print("Failed to update appointment: $error");
             });
           },
-          child: Text(
+          child: const Text(
             'Save',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
@@ -416,6 +418,8 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
 }
 
 class ScheduleAppointmentForm extends StatefulWidget {
+  const ScheduleAppointmentForm({super.key});
+
   @override
   State<ScheduleAppointmentForm> createState() =>
       _ScheduleAppointmentFormState();
@@ -468,19 +472,19 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       child: ListView(
         children: [
           TextField(
             controller: titleController,
-            decoration: InputDecoration(labelText: 'Title'),
+            decoration: const InputDecoration(labelText: 'Title'),
             onChanged: (value) {
               setState(() {
                 title = value;
               });
             },
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Row(
             children: [
               Expanded(
@@ -490,14 +494,14 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
                     child: TextField(
                       controller: TextEditingController(
                           text: DateFormat('dd/MM/yyyy').format(_selectedDate)),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Date',
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 10.0),
+              const SizedBox(width: 10.0),
               Expanded(
                 child: GestureDetector(
                   onTap: () => _selectTime(context),
@@ -505,7 +509,7 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
                     child: TextField(
                       controller: TextEditingController(
                           text: _selectedTime.format(context)),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Time',
                       ),
                     ),
@@ -516,7 +520,7 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
           ),
           TextField(
             controller: locationController,
-            decoration: InputDecoration(labelText: 'Location'),
+            decoration: const InputDecoration(labelText: 'Location'),
             onChanged: (value) {
               setState(() {
                 location = value;
@@ -525,20 +529,20 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
           ),
           TextField(
             controller: descriptionController,
-            decoration: InputDecoration(labelText: 'Description/Notes'),
+            decoration: const InputDecoration(labelText: 'Description/Notes'),
             onChanged: (value) {
               setState(() {
                 description = value;
               });
             },
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           SizedBox(
             height: 50,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xFF273671)),
+                    MaterialStateProperty.all<Color>(const Color(0xFF273671)),
               ),
               onPressed: () {
                 // Upload data to Firestore
@@ -554,7 +558,7 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
                   'Description': description,
                   'Title': title,
                 }).then((value) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text(
                       "Appointment Scheduled Successfully",
                       style: TextStyle(fontSize: 18.0),
@@ -565,7 +569,7 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
                   print("Failed to schedule appointment: $error");
                 });
               },
-              child: Text(
+              child: const Text(
                 'Schedule Appointment',
                 style: TextStyle(
                     color: Colors.yellow,

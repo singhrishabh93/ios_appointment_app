@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -34,10 +36,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile', style: TextStyle(color: Colors.yellow),),
-        backgroundColor: Color(0xFF273671), 
+        title: const Text('User Profile', style: TextStyle(color: Colors.yellow),),
+        backgroundColor: const Color(0xFF273671), 
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -46,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
             color: Colors.grey[200], // Light grey background color
             borderRadius: BorderRadius.circular(15.0), // Rounded corners
@@ -59,11 +61,11 @@ class _ProfilePageState extends State<ProfilePage> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
 
               if (!snapshot.hasData || snapshot.data!.data() == null) {
-                return Text('No data found for this user');
+                return const Text('No data found for this user');
               }
 
               Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
@@ -86,16 +88,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   _buildEditableProfileItem('Age', _ageController!),
                   _buildEditableProfileItem('Contact Number', _contactNumberController!),
                   _buildEditableProfileItem('Organization', _organizationController!),
-                  SizedBox(height: 20),
-                  Container(
+                  const SizedBox(height: 20),
+                  SizedBox(
                     height: 50,
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
                       onPressed: _saveProfile,
-                      child: Text('Save', style: TextStyle(color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w500)),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF273671), // Instagram-like blue color for the button
+                        backgroundColor: const Color(0xFF273671), // Instagram-like blue color for the button
                       ),
+                      child: const Text('Save', style: TextStyle(color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w500)),
                     ),
                   ),
                 ],
@@ -114,12 +116,12 @@ class _ProfilePageState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            label + ':',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            '$label:',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         ],
       ),
@@ -133,13 +135,13 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label + ':',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            '$label:',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           TextFormField(
             controller: controller,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               fillColor: Colors.white, // White background for text field
               filled: true,
@@ -159,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }, SetOptions(merge: true));
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Profile Updated Successfully')),
+      const SnackBar(content: Text('Profile Updated Successfully')),
     );
   }
 
