@@ -34,56 +34,74 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile'),
+        title: Text('User Profile', style: TextStyle(color: Colors.yellow),),
+        backgroundColor: Color(0xFF273671), 
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: Colors.white,
+        )// Instagram-like color
       ),
       body: Center(
-        child: FutureBuilder<DocumentSnapshot>(
-          future: FirebaseFirestore.instance.collection('users').doc(_email).get(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
+        child: Container(
+          padding: EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200], // Light grey background color
+            borderRadius: BorderRadius.circular(15.0), // Rounded corners
+          ),
+          child: FutureBuilder<DocumentSnapshot>(
+            future: FirebaseFirestore.instance.collection('users').doc(_email).get(),
+            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
 
-            if (!snapshot.hasData || snapshot.data!.data() == null) {
-              return Text('No data found for this user');
-            }
+              if (!snapshot.hasData || snapshot.data!.data() == null) {
+                return Text('No data found for this user');
+              }
 
-            Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
+              Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
 
-            _nameController = TextEditingController(text: userData['Name'] ?? '');
-            _ageController = TextEditingController(text: userData['age'] ?? '');
-            _contactNumberController = TextEditingController(text: userData['contactNumber'] ?? '');
-            _organizationController = TextEditingController(text: userData['organization'] ?? '');
+              _nameController = TextEditingController(text: userData['Name'] ?? '');
+              _ageController = TextEditingController(text: userData['age'] ?? '');
+              _contactNumberController = TextEditingController(text: userData['contactNumber'] ?? '');
+              _organizationController = TextEditingController(text: userData['organization'] ?? '');
 
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Profile Information',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
+                  // Text(
+                  //   'Profile Information',
+                  //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  // ),
+                  // SizedBox(height: 20),
                   _buildProfileItem('Email', _email),
                   _buildEditableProfileItem('Name', _nameController!),
                   _buildEditableProfileItem('Age', _ageController!),
                   _buildEditableProfileItem('Contact Number', _contactNumberController!),
                   _buildEditableProfileItem('Organization', _organizationController!),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _saveProfile,
-                    child: Text('Save'),
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      onPressed: _saveProfile,
+                      child: Text('Save', style: TextStyle(color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w500)),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF273671), // Instagram-like blue color for the button
+                      ),
+                    ),
                   ),
                 ],
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -123,6 +141,8 @@ class _ProfilePageState extends State<ProfilePage> {
             controller: controller,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
+              fillColor: Colors.white, // White background for text field
+              filled: true,
             ),
           ),
         ],

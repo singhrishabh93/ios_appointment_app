@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/route_manager.dart';
@@ -25,22 +26,13 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
       ),
-      body: ScheduledAppointments(),
+      body: Container(
+        color: Colors.grey[200],
+        child: ScheduledAppointments(),
+      ),
       drawer: Drawer(
         child: ListView(
           children: [
-            // const DrawerHeader(
-            //   decoration: BoxDecoration(
-            //     color: Colors.blue,
-            //   ),
-            //   child: Text(
-            //     'Menu',
-            //     style: TextStyle(
-            //       color: Colors.white,
-            //       fontSize: 24,
-            //     ),
-            //   ),
-            // ),
             SizedBox(
               height: 50,
             ),
@@ -93,11 +85,12 @@ class _HomeState extends State<Home> {
 class ScheduledAppointments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String email = FirebaseAuth.instance.currentUser!.email!;
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc('appointment')
-          .collection('active')
+          .doc(email)
+          .collection('appointment')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -109,7 +102,7 @@ class ScheduledAppointments extends StatelessWidget {
         }
 
         if (snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No appointments scheduled'));
+          return Center(child: Text('No appointments scheduled. Click on \nthe + button to schedule an appointment'));
         }
 
         return ListView(
@@ -130,11 +123,11 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = data['title'];
-    String date = data['date'];
-    String time = data['time'];
-    String location = data['location'];
-    String description = data['description'];
+    String title = data['Title'];
+    String date = data['Date'];
+    String time = data['Time'];
+    String location = data['Location'];
+    String description = data['Description'];
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -192,10 +185,9 @@ class AppointmentCard extends StatelessWidget {
                             onPressed: () {
                               FirebaseFirestore.instance
                                   .collection('users')
-                                  .doc('appointment')
-                                  .collection('active')
-                                  .doc(
-                                      title) // Use the title as the document ID
+                                  .doc(FirebaseAuth.instance.currentUser!.email!)
+                                  .collection('appointment')
+                                  .doc(title)
                                   .delete()
                                   .then((value) {
                                 ScaffoldMessenger.of(context)
@@ -253,12 +245,12 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
   @override
   void initState() {
     super.initState();
-    _title = widget.data['title'];
-    _location = widget.data['location'];
-    _description = widget.data['description'];
-    _selectedDate = DateFormat('dd/MM/yyyy').parse(widget.data['date']);
+    _title = widget.data['Title'];
+    _location = widget.data['Location'];
+    _description = widget.data['Description'];
+    _selectedDate = DateFormat('dd/MM/yyyy').parse(widget.data['Date']);
     _selectedTime =
-        TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(widget.data['time']));
+        TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(widget.data['Time']));
     _titleController.text = _title;
     _locationController.text = _location;
     _descriptionController.text = _description;
@@ -387,15 +379,15 @@ class _EditAppointmentDialogState extends State<EditAppointmentDialog> {
             // Update data to Firestore
             FirebaseFirestore.instance
                 .collection('users')
-                .doc('appointment')
-                .collection('active')
+                .doc(FirebaseAuth.instance.currentUser!.email!)
+                .collection('appointment')
                 .doc(_title)
                 .set({
-              'date': DateFormat('dd/MM/yyyy').format(_selectedDate),
-              'time': _selectedTime.format(context),
-              'location': _location,
-              'description': _description,
-              'title': _title,
+              'Date': DateFormat('dd/MM/yyyy').format(_selectedDate),
+              'Time': _selectedTime.format(context),
+              'Location': _location,
+              'Description': _description,
+              'Title': _title,
             }).then((value) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
@@ -545,15 +537,15 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
               // Upload data to Firestore
               FirebaseFirestore.instance
                   .collection('users')
-                  .doc('appointment')
-                  .collection('active')
+                  .doc(FirebaseAuth.instance.currentUser!.email!)
+                  .collection('appointment')
                   .doc(title)
                   .set({
-                'date': DateFormat('dd/MM/yyyy').format(_selectedDate),
-                'time': _selectedTime.format(context),
-                'location': location,
-                'description': description,
-                'title': title,
+                'Date': DateFormat('dd/MM/yyyy').format(_selectedDate),
+                'Time': _selectedTime.format(context),
+                'Location': location,
+                'Description': description,
+                'Title': title,
               }).then((value) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
