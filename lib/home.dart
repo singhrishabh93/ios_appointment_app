@@ -449,7 +449,7 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
         children: [
           TextField(
             controller: titleController,
-            decoration: InputDecoration(labelText: 'Title/Name'),
+            decoration: InputDecoration(labelText: 'Title'),
             onChanged: (value) {
               setState(() {
                 title = value;
@@ -508,6 +508,9 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
           ),
           SizedBox(height: 20.0),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF273671)),
+            ),
             onPressed: () {
               // Upload data to Firestore
               FirebaseFirestore.instance
@@ -533,7 +536,7 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
                 print("Failed to schedule appointment: $error");
               });
             },
-            child: Text('Schedule Appointment'),
+            child: Text('Schedule Appointment', style: TextStyle(color: Colors.yellow),),
           ),
         ],
       ),
