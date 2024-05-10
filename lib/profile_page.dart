@@ -10,6 +10,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late User? _user;
   late String _email;
+  TextEditingController? _nameController;
+  TextEditingController? _ageController;
+  TextEditingController? _contactNumberController;
+  TextEditingController? _organizationController;
 
   @override
   void initState() {
@@ -50,6 +54,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
             Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
 
+            _nameController = TextEditingController(text: userData['Name'] ?? '');
+            _ageController = TextEditingController(text: userData['age'] ?? '');
+            _contactNumberController = TextEditingController(text: userData['contactNumber'] ?? '');
+            _organizationController = TextEditingController(text: userData['organization'] ?? '');
+
             return Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -62,10 +71,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 20),
                   _buildProfileItem('Email', _email),
-                  _buildProfileItem('Name', userData['Name'] ?? 'N/A'),
-                  _buildProfileItem('Age', userData['age'] ?? 'N/A'),
-                  _buildProfileItem('Contact Number', userData['contactNumber'] ?? 'N/A'),
-                  _buildProfileItem('Organization', userData['organization'] ?? 'N/A'),
+                  _buildEditableProfileItem('Name', _nameController!),
+                  _buildEditableProfileItem('Age', _ageController!),
+                  _buildEditableProfileItem('Contact Number', _contactNumberController!),
+                  _buildEditableProfileItem('Organization', _organizationController!),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _saveProfile,
+                    child: Text('Save'),
+                  ),
                 ],
               ),
             );
@@ -92,5 +106,49 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  Widget _buildEditableProfileItem(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label + ':',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _saveProfile() async {
+    await FirebaseFirestore.instance.collection('users').doc(_email).set({
+      'Name': _nameController!.text.trim(),
+      'age': _ageController!.text.trim(),
+      'contactNumber': _contactNumberController!.text.trim(),
+      'organization': _organizationController!.text.trim(),
+    }, SetOptions(merge: true));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Profile Updated Successfully')),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController?.dispose();
+    _ageController?.dispose();
+    _contactNumberController?.dispose();
+    _organizationController?.dispose();
+    super.dispose();
   }
 }
