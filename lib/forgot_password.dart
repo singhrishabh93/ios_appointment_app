@@ -123,14 +123,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               }
                             },
                             child: Container(
-                              width: 140,
+                              width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10)),
                               child: Center(
                                 child: Text(
-                                  "Send Email",
+                                  "Send Reset Link",
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18.0,

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:ios_appointment_app/forgot_password.dart';
+import 'package:ios_appointment_app/help_page.dart';
 import 'package:ios_appointment_app/login.dart';
 import 'package:ios_appointment_app/profile_page.dart';
 
@@ -19,6 +20,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[200],
         title: Text(
           "My Appointments",
           style:
@@ -51,7 +53,7 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Text('Help'),
               onTap: () {
-                // Add your help navigation logic here
+                Get.to(() => HelpPage());
               },
             ),
             ListTile(
@@ -102,7 +104,9 @@ class ScheduledAppointments extends StatelessWidget {
         }
 
         if (snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No appointments scheduled. Click on \nthe + button to schedule an appointment'));
+          return Center(
+              child: Text(
+                  'No appointments scheduled. Click on \nthe + button to schedule an appointment'));
         }
 
         return ListView(
@@ -185,7 +189,8 @@ class AppointmentCard extends StatelessWidget {
                             onPressed: () {
                               FirebaseFirestore.instance
                                   .collection('users')
-                                  .doc(FirebaseAuth.instance.currentUser!.email!)
+                                  .doc(
+                                      FirebaseAuth.instance.currentUser!.email!)
                                   .collection('appointment')
                                   .doc(title)
                                   .delete()
@@ -562,7 +567,10 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
               },
               child: Text(
                 'Schedule Appointment',
-                style: TextStyle(color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: Colors.yellow,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500),
               ),
             ),
           ),
