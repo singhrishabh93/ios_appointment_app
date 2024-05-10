@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.yellow,
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
             },
           );
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: Color(0xFF273671)),
       ),
     );
   }
