@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:ios_appointment_app/forgot_password.dart';
 import 'package:ios_appointment_app/home.dart';
 import 'package:ios_appointment_app/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+  const LogIn({Key? key}) : super(key: key);
 
   @override
   State<LogIn> createState() => _LogInState();
@@ -20,6 +21,23 @@ class _LogInState extends State<LogIn> {
 
   final _formkey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    // Check if the user is already logged in
+    checkLoginStatus();
+  }
+
+  void checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    if (isLoggedIn) {
+      // If user is already logged in, navigate to Home screen
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Home()));
+    }
+  }
+
   userLogin() async {
     setState(() {
       isLoading = true;
@@ -27,7 +45,12 @@ class _LogInState extends State<LogIn> {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+      // Store login state in shared preferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
+      // Navigate to Home screen
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Home()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -159,8 +182,10 @@ class _LogInState extends State<LogIn> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const ForgotPassword()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ForgotPassword()));
                   },
                   child: const Text("Forgot Password?",
                       style: TextStyle(
@@ -168,49 +193,6 @@ class _LogInState extends State<LogIn> {
                           fontSize: 18.0,
                           fontWeight: FontWeight.w500)),
                 ),
-                const SizedBox(
-                  height: 40.0,
-                ),
-                // Text(
-                //   "or LogIn with",
-                //   style: TextStyle(
-                //       color: Color(0xFF273671),
-                //       fontSize: 22.0,
-                //       fontWeight: FontWeight.w500),
-                // ),
-                // SizedBox(
-                //   height: 30.0,
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     GestureDetector(
-                //       onTap: () {
-                //         AuthMethods().signInWithGoogle(context);
-                //       },
-                //       child: Image.asset(
-                //         "images/google.png",
-                //         height: 45,
-                //         width: 45,
-                //         fit: BoxFit.cover,
-                //       ),
-                //     ),
-                //     SizedBox(
-                //       width: 30.0,
-                //     ),
-                //     GestureDetector(
-                //       onTap: () {
-                //         AuthMethods().signInWithApple();
-                //       },
-                //       child: Image.asset(
-                //         "images/apple1.png",
-                //         height: 50,
-                //         width: 50,
-                //         fit: BoxFit.cover,
-                //       ),
-                //     )
-                //   ],
-                // ),
                 const SizedBox(
                   height: 40.0,
                 ),
