@@ -166,8 +166,45 @@ class AppointmentCard extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   // Delete button logic
-                  // You can show a confirmation dialog before deleting
-                  // or directly delete the appointment from Firestore
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Confirm Delete'),
+                        content: Text('Are you sure you want to delete this appointment?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc('appointment')
+                                  .collection('active')
+                                  .doc(title) // Use the title as the document ID
+                                  .delete()
+                                  .then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                    "Appointment Deleted Successfully",
+                                    style: TextStyle(fontSize: 18.0),
+                                  ),
+                                ));
+                                Navigator.pop(context); // Close the dialog
+                              }).catchError((error) {
+                                print("Failed to delete appointment: $error");
+                              });
+                            },
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 icon: Icon(Icons.delete, color: Colors.red),
               ),
@@ -503,4 +540,3 @@ class _ScheduleAppointmentFormState extends State<ScheduleAppointmentForm> {
     );
   }
 }
-
