@@ -172,46 +172,46 @@ class _LogInState extends State<LogIn> {
                 SizedBox(
                   height: 40.0,
                 ),
-                Text(
-                  "or LogIn with",
-                  style: TextStyle(
-                      color: Color(0xFF273671),
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        AuthMethods().signInWithGoogle(context);
-                      },
-                      child: Image.asset(
-                        "images/google.png",
-                        height: 45,
-                        width: 45,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 30.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        AuthMethods().signInWithApple();
-                      },
-                      child: Image.asset(
-                        "images/apple1.png",
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  ],
-                ),
+                // Text(
+                //   "or LogIn with",
+                //   style: TextStyle(
+                //       color: Color(0xFF273671),
+                //       fontSize: 22.0,
+                //       fontWeight: FontWeight.w500),
+                // ),
+                // SizedBox(
+                //   height: 30.0,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     GestureDetector(
+                //       onTap: () {
+                //         AuthMethods().signInWithGoogle(context);
+                //       },
+                //       child: Image.asset(
+                //         "images/google.png",
+                //         height: 45,
+                //         width: 45,
+                //         fit: BoxFit.cover,
+                //       ),
+                //     ),
+                //     SizedBox(
+                //       width: 30.0,
+                //     ),
+                //     GestureDetector(
+                //       onTap: () {
+                //         AuthMethods().signInWithApple();
+                //       },
+                //       child: Image.asset(
+                //         "images/apple1.png",
+                //         height: 50,
+                //         width: 50,
+                //         fit: BoxFit.cover,
+                //       ),
+                //     )
+                //   ],
+                // ),
                 SizedBox(
                   height: 40.0,
                 ),
