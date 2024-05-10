@@ -7,6 +7,7 @@ import 'package:ios_appointment_app/forgot_password.dart';
 import 'package:ios_appointment_app/help_page.dart';
 import 'package:ios_appointment_app/login.dart';
 import 'package:ios_appointment_app/profile_page.dart';
+import 'package:ios_appointment_app/signup.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -83,10 +84,7 @@ class _HomeState extends State<Home> {
             ListTile(
               title: const Text('Logout'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogIn()),
-                );
+               Get.to(() => const SignUp());
               },
             ),
           ],
