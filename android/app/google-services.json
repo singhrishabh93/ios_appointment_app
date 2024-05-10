@@ -12,7 +12,12 @@
           "package_name": "com.example.ios_appointment_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "819035420068-u7m9bntsd61jda23907q7gc7qpoofaeg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBxPvRQrIKBUCy3KwZ6L_2q8tpmNI1QcVA"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819035420068-u7m9bntsd61jda23907q7gc7qpoofaeg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "819035420068-9j3nbqflhn3u01qfjfn0ggvpo5o5hhf9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.iosAppointmentApp"
+              }
+            }
+          ]
         }
       }
     }
